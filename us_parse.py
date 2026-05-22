@@ -10,6 +10,11 @@ from dotenv import load_dotenv, dotenv_values
 
 load_dotenv()
 
+#If you have a .env file, you can load it like this:
+#config = dotenv_values(".env")
+
+#If .env file is e
+
 # List of all locations
 locations = ["alabama",
     "louisiana", "kentucky", "oregon", "oklahoma", "connecticut", "utah", "nevada",
@@ -41,11 +46,18 @@ CREATE TABLE IF NOT EXISTS SDUSsalaries (
 # Iterate over locations and fetch data
 for location in locations:
     encoded_location = quote(location)  # Encode the location for URL
-    conn_http = http.client.HTTPSConnection(os.getenv("API_HOST"))
+    api_key = os.getenv("API_KEY")
+    if not api_key:
+        raise EnvironmentError("API_KEY environment variable is required")
+
+    api_host = os.getenv("API_HOST")
+    if not api_host:
+        raise EnvironmentError("API_HOST environment variable is required")
+    conn_http = http.client.HTTPSConnection(api_host)
 
     headers = {
-        'x-rapidapi-key': os.getenv("API_KEY"),
-        'x-rapidapi-host': os.getenv("API_HOST")
+        'x-rapidapi-key': api_key,
+        'x-rapidapi-host': api_host
     }
 
     try:
